@@ -427,7 +427,7 @@ describe('FileProcessor', function() {
     });
 
     describe('font path', function() {
-      var content = '@font-face {\nfont-family:"icons";\nsrc:url("/styles/fonts/icons.eot");\nsrc:url("/styles/fonts/icons.eot?#iefix") format("embedded-opentype"),\nurl("/styles/fonts/icons.woff") format("woff"),\nurl("/styles/fonts/icons.ttf") format("truetype"),\nurl("/styles/fonts/icons.svg?#icons") format("svg");\nfont-weight:normal;\nfont-style:normal;\n}';
+      var content = '@font-face {\nfont-family:"icons";\nsrc:url("/styles/fonts/icons.eot");\nsrc:url("/styles/fonts/icons.eot?#iefix") format("embedded-opentype"),\nurl("/styles/fonts/icons.woff") format("woff"),\nurl("/styles/fonts/icons.ttf") format("truetype"),\nurl("/styles/fonts/icons.svg#icons") format("svg");\nfont-weight:normal;\nfont-style:normal;\n}';
       var filemapping = {
         'build/styles/fonts/icons.eot': '/styles/fonts/icons.12345.eot',
         'build/styles/fonts/icons.woff': '/styles/fonts/icons.12345.woff',
