@@ -100,7 +100,7 @@ By default, it will consider the directory where the looked-at file is located a
 If you need to change the 'root' dir, use the `root` option (see bellow).
 
 ```js
-'useminPrepare': {
+useminPrepare: {
   html: 'index.html'
 }
 ```
@@ -154,7 +154,7 @@ For example:
 * to change the `js` `steps` and `post` for the target `html`:
 
 ```js
-'useminPrepare', {
+useminPrepare, {
       html: 'index.html',
       options: {
         flow: {
@@ -170,16 +170,42 @@ For example:
 * to change the `js` `steps` and `post` for all targets:
 
 ```js
+useminPrepare, {
+      html: 'index.html',
+      options: {
+        flow: {
+          steps: {'js' : ['uglifyjs'] },
+          post: {}
+        }
+      }
+    }
+```
+
+* to customize the generated configuraion via post-processors:
+
+```js
 'useminPrepare', {
       html: 'index.html',
       options: {
         flow: {
           steps: {'js' : ['uglifyjs'] },
-          post: []
+          post: {
+            'js': [{
+              name: 'uglifyjs',
+              createConfig: function(context, block) {
+                  var generated = context.options.generated;
+                  generated.options = {
+                      foo: 'bar'
+                  };
+              }
+            }]
+          }
         }
       }
     }
+}
 ```
+
 The given steps or post-processors may be specified as strings (for the default steps and post-processors), or as an object (for the user-defined ones).
 
 #### User-defined steps and post-processors
@@ -303,7 +329,7 @@ usemin: {
 Type: 'Object'
 Default: Empty
 
-Allows for user defined pattern to replace reference to files. For example, let's suppose that you want for some reason replace
+Allows for user defined pattern to replace reference to files. For example, let's suppose that you want to replace
 all references to `'image.png'` in your Javascript files by the revved version of `image.png` found bellow the directory `images`.
 By specifying something along the lines of:
 
@@ -466,7 +492,7 @@ By using the following `useminPrepare` config:
   useminPrepare: {
     html: 'html/index.html',
     options: {
-      root: 'app'
+      root: 'app',
       dest: 'dist'
     }
   }
