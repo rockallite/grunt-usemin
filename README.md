@@ -268,6 +268,31 @@ var block = {
 
 ```
 
+### useDjangoFlow
+
+Type: 'boolean'
+Default: `undefined`
+
+If true, use a Django-compatible workflow, which is equivalent to:
+
+```js
+useminPrepare, {
+      options: {
+        flow: {
+          html: {
+            steps: {
+              'js': ['djangoconcat', 'djangouglifyjs'],
+              'css': ['djangoconcat', 'djangocssmin']
+            },
+            post: {}
+          }
+        }
+      }
+    }
+```
+
+`{ steps: { 'js': ['djangoconcat', 'djangouglifyjs'], 'css': ['djangoconcat', 'djangocssmin']}, post: {}}`.
+
 ## The usemin task
 
 The `usemin` task has 2 actions:
@@ -354,6 +379,13 @@ So in short:
   * Second one is a logging string
     * FIXME
     * FIXME
+
+#### useDjangoPatterns
+
+Type: 'Boolean'
+Default: `undefined`
+
+If true, use a Django-compatible patterns to replace reference to files, with respect to `{{ STATIC_URL }}` and `{% static %}` tags in URLs.
 
 #### revmap
 

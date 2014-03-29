@@ -9,9 +9,12 @@ var inspect = function (obj) {
 //  - a dedicated one for the furnished target
 //  - a general one
 //  - the default one
-var getFlowFromConfig = function(config, target) {
+var getFlowFromConfig = function(config, target, useDjangoFlow) {
   var Flow = require('../lib/flow');
-  var flow = new Flow({ steps: {'js': ['concat', 'uglifyjs'], 'css': ['concat', 'cssmin']}, post: {}});
+  var flow = new Flow(useDjangoFlow ?
+    { steps: {'js': ['djangoconcat', 'djangouglifyjs'], 'css': ['djangoconcat', 'djangocssmin']}, post: {}} :
+    { steps: {'js': ['concat', 'uglifyjs'], 'css': ['concat', 'cssmin']}, post: {}}
+  );
   if (config.options && config.options.flow) {
     if (config.options.flow[target]) {
       flow.setSteps(config.options.flow[target].steps);
@@ -107,13 +110,27 @@ module.exports = function (grunt) {
 
     // Check if we have a user defined pattern
     if (options.patterns && options.patterns[this.target]) {
+      if (options.useDjangoPatterns) {
+        throw new Error('User defined pattern cannot be use with `useDjangoPatterns: true` option');
+      }
       debug('Using user defined pattern for %s',this.target);
       patterns = options.patterns[this.target];
     }
-    else
-    {
-      debug('Using predefined pattern for %s',this.target);
-      patterns = options.type;
+    else {
+      if (options.useDjangoPatterns) {
+        // Use Django patterns if available.
+        var DjangoProcessor = require('../lib/djangoprocessor');
+        var djangoprocessor = new DjangoProcessor(grunt);
+        patterns = djangoprocessor.patterns[this.target];
+        if (patterns) {
+          debug('Using predefined Django pattern for %s',this.target);
+        }
+        // Fall back to predefined pattern if target not available (e.g. "css")
+      }
+      if (patterns === undefined) {
+        debug('Using predefined pattern for %s',this.target);
+        patterns = options.type;
+      }
     }
 
     // var locator = options.revmap ? grunt.file.readJSON(options.revmap) : function (p) { return grunt.file.expand({filter: 'isFile'}, p); };
@@ -148,7 +165,7 @@ module.exports = function (grunt) {
       .writeln('Going through ' + grunt.log.wordlist(this.filesSrc) + ' to update the config')
       .writeln('Looking for build script HTML comment blocks');
 
-    var flow = getFlowFromConfig(grunt.config('useminPrepare'), this.target);
+    var flow = getFlowFromConfig(grunt.config('useminPrepare'), this.target, options.useDjangoFlow);
 
     var c = new ConfigWriter( flow, {root: root, dest: dest, staging: staging} );
 
