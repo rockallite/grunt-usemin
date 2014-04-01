@@ -109,28 +109,22 @@ module.exports = function (grunt) {
     var patterns;
 
     // Check if we have a user defined pattern
-    if (options.patterns && options.patterns[this.target]) {
-      if (options.useDjangoPatterns) {
-        throw new Error('User defined pattern cannot be use with `useDjangoPatterns: true` option');
-      }
-      debug('Using user defined pattern for %s',this.target);
+    if (options.patterns) {
       patterns = options.patterns[this.target];
+      if (patterns) {
+        debug('Using patterns from options for %s.', this.target);
+      }
     }
-    else {
-      if (options.useDjangoPatterns) {
-        // Use Django patterns if available.
-        var DjangoProcessor = require('../lib/djangoprocessor');
-        var djangoprocessor = new DjangoProcessor(grunt);
-        patterns = djangoprocessor.patterns[this.target];
-        if (patterns) {
-          debug('Using predefined Django pattern for %s',this.target);
-        }
-        // Fall back to predefined pattern if target not available (e.g. "css")
+    else if (options.useDjangoPatterns) {
+      patterns = require('../lib/config/djangopatterns')[this.target];
+      if (patterns) {
+        debug('Using Django patterns for %s.', this.target);
       }
-      if (patterns === undefined) {
-        debug('Using predefined pattern for %s',this.target);
-        patterns = options.type;
-      }
+    }
+
+    if (patterns === undefined) {
+      debug('Using predefined pattern for %s', this.target);
+      patterns = options.type;
     }
 
     // var locator = options.revmap ? grunt.file.readJSON(options.revmap) : function (p) { return grunt.file.expand({filter: 'isFile'}, p); };

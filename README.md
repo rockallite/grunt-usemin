@@ -550,6 +550,23 @@ This will, on the fly, generate the following configuration:
 }
 ```
 
+### Replace assets in special location inside Django templates
+
+By default, static assets of `<script>`, `<link>`, `<img>`, and inline CSS, etc, will be automatically replaced by the corresponding revved version. However, sometimes you may need to replace some assets not in those positions. You'll need to surround the asset URL by `{# usemin #} ... {# endusemin #}`. For example:
+
+```html
+<!DOCYTYPE html>
+<html>
+<head>
+<script>
+  // Assets among JavaScript code is not detected. Use the surrounding tags
+  var imgUrl = '{# usemin #}{% static "images/foo.png" %}{# endusemin #}';
+</script>
+</head>
+```
+
+After the `usemin` task, the image URL will be replaced by the revved version, and the `{# usemin #} ... {# endusemin #}` tags will be removed.
+
 ## License
 
 [BSD license](http://opensource.org/licenses/bsd-license.php) and copyright Google
