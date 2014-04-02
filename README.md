@@ -1,6 +1,6 @@
 # grunt-usemin [![Build Status](https://secure.travis-ci.org/yeoman/grunt-usemin.png?branch=master)](http://travis-ci.org/yeoman/grunt-usemin) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-> Replaces references to non-optimized scripts or stylesheets into a set of HTML files (or any templates/views).
+> Replaces references to non-optimized scripts or stylesheets into a set of HTML files (or any templates/views). This is a Django-friendly built.
 
 Watch out, this task is designed for Grunt 0.4 and upwards.
 
@@ -9,6 +9,11 @@ If you haven't used [grunt][] before, be sure to check out the [Getting Started]
 
 ```shell
 npm install grunt-usemin --save-dev
+```
+
+Or install this Django-friendly built:
+```shell
+npm install git://github.com/rockallite/grunt-usemin.git#develop
 ```
 
 [grunt]: http://gruntjs.com/
@@ -270,6 +275,8 @@ var block = {
 
 ### useDjangoFlow
 
+> Django-aware extension
+
 Type: 'boolean'
 Default: `undefined`
 
@@ -290,8 +297,6 @@ useminPrepare, {
       }
     }
 ```
-
-`{ steps: { 'js': ['djangoconcat', 'djangouglifyjs'], 'css': ['djangoconcat', 'djangocssmin']}, post: {}}`.
 
 ## The usemin task
 
@@ -381,6 +386,8 @@ So in short:
     * FIXME
 
 #### useDjangoPatterns
+
+> Django-aware extension
 
 Type: 'Boolean'
 Default: `undefined`
@@ -551,6 +558,8 @@ This will, on the fly, generate the following configuration:
 ```
 
 ### Replace assets in special location inside Django templates
+
+> Django-aware extension
 
 By default, static assets of `<script>`, `<link>`, `<img>`, and inline CSS, etc, will be automatically replaced by the corresponding revved version. However, sometimes you may need to replace some assets not in those positions. You'll need to surround the asset URL by `{# usemin #} ... {# endusemin #}`. For example:
 
