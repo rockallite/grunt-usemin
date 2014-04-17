@@ -44,7 +44,7 @@ describe('usemin', function () {
 
         grunt.log.muted = true;
         grunt.config.init();
-        grunt.config('usemin', {html: 'build/index.html'});
+        grunt.config('usemin', {html: 'build/index.html', options: { useDjangoPatterns: true}});
         // grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
         grunt.task.run('usemin');
         grunt.task.start();
@@ -52,7 +52,6 @@ describe('usemin', function () {
         var changed = grunt.file.read('build/index.html');
 
         assert.ok(changed.match(/<img src="\/images\/test\.23012\.png">/));
-        assert.ok(changed.match(/<img src="\/\/images\/bar\.23012\.png">/));
         assert.ok(changed.match(/<img src="\/images\/misc\/test\.2a436\.png">/));
 
       });
@@ -69,14 +68,13 @@ describe('usemin', function () {
 
         grunt.log.muted = true;
         grunt.config.init();
-        grunt.config('usemin', {html: 'build/index.html', options: { assetsDirs: ['foo']}});
+        grunt.config('usemin', {html: 'build/index.html', options: { assetsDirs: ['foo'], useDjangoPatterns: true}});
         grunt.task.run('usemin');
         grunt.task.start();
 
         var changed = grunt.file.read('build/index.html');
 
         assert.ok(changed.match(/<img src="\/images\/test\.23012\.png">/));
-        assert.ok(changed.match(/<img src="\/\/images\/bar\.23012\.png">/));
         assert.ok(changed.match(/<img src="\/images\/misc\/test\.2a436\.png">/));
 
       });
@@ -97,14 +95,13 @@ describe('usemin', function () {
 
         grunt.log.muted = true;
         grunt.config.init();
-        grunt.config('usemin', {html: 'build/index.html',  options: { assetsDirs: ['foo', 'bar']}});
+        grunt.config('usemin', {html: 'build/index.html',  options: { assetsDirs: ['foo', 'bar'], useDjangoPatterns: true}});
         grunt.task.run('usemin');
         grunt.task.start();
 
         var changed = grunt.file.read('build/index.html');
 
         assert.ok(changed.match(/<img src="\/images\/test\.23012\.png">/));
-        assert.ok(changed.match(/<img src="\/\/images\/bar\.23012\.png">/));
         assert.ok(changed.match(/<img src="\/images\/misc\/test\.2a436\.png">/));
         assert.ok(changed.match(/<script src="\/scripts\/plugins\.12345\.js">/));
       });
@@ -126,7 +123,7 @@ describe('usemin', function () {
 
         grunt.log.muted = true;
         grunt.config.init();
-        grunt.config('usemin', {html: 'build/foo/index.html'});
+        grunt.config('usemin', {html: 'build/foo/index.html', options: { useDjangoPatterns: true}});
         grunt.task.run('usemin');
         grunt.task.start();
 
@@ -151,7 +148,7 @@ describe('usemin', function () {
 
         grunt.log.muted = true;
         grunt.config.init();
-        grunt.config('usemin', {html: 'build/index.html', options: { assetsDirs: ['foo/bar']}});
+        grunt.config('usemin', {html: 'build/index.html', options: { assetsDirs: ['foo/bar'], useDjangoPatterns: true}});
         grunt.task.run('usemin');
         grunt.task.start();
 
@@ -177,7 +174,7 @@ describe('usemin', function () {
 
         grunt.log.muted = true;
         grunt.config.init();
-        grunt.config('usemin', {html: 'build/index.html',  options: { assetsDirs: ['foo/bar', 'bar']}});
+        grunt.config('usemin', {html: 'build/index.html',  options: { assetsDirs: ['foo/bar', 'bar'], useDjangoPatterns: true}});
         grunt.task.run('usemin');
         grunt.task.start();
 
@@ -200,7 +197,7 @@ describe('usemin', function () {
     grunt.file.write('images/misc/test.2a436.png', 'foo');
     grunt.log.muted = true;
     grunt.config.init();
-    grunt.config('usemin', {css: 'style.css'});
+    grunt.config('usemin', {css: 'style.css', options: { useDjangoPatterns: true}});
     grunt.file.copy(path.join(__dirname, 'fixtures/style.css'), 'style.css');
     grunt.task.run('usemin');
     grunt.task.start();
@@ -210,7 +207,6 @@ describe('usemin', function () {
     // Check replace has performed its duty
     assert.ok(changed.match(/url\(\"images\/test\.23012\.png\"/));
     assert.ok(changed.match(/url\(\"images\/misc\/test\.2a436\.png\"/));
-    assert.ok(changed.match(/url\(\"\/\/images\/test\.23012\.png\"/));
     assert.ok(changed.match(/url\(\"\/images\/test\.23012\.png\"/));
   });
 
@@ -219,7 +215,7 @@ describe('usemin', function () {
     grunt.file.write('bar-foo.html', 'foo');
     grunt.log.muted = true;
     grunt.config.init();
-    grunt.config('usemin', {html: 'index.html'});
+    grunt.config('usemin', {html: 'index.html', options: { useDjangoPatterns: true}});
     grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
     grunt.task.run('usemin');
     grunt.task.start();
@@ -239,6 +235,7 @@ describe('usemin', function () {
       js: 'misc.js',
       options: {
         assetsDirs: 'images',
+        useDjangoPatterns: true,
         patterns: {
           js: [
             [/referenceToImage = '([^\']+)'/, 'Replacing image']
@@ -263,7 +260,7 @@ describe('usemin', function () {
     grunt.file.write('summary.js', '{"images/test.png": "images/test.2134.png"}');
     grunt.log.muted = true;
     grunt.config.init();
-    grunt.config('usemin', {html: 'index.html', options: { revmap: 'summary.js'}});
+    grunt.config('usemin', {html: 'index.html', options: { revmap: 'summary.js', useDjangoPatterns: true}});
     grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
     grunt.task.run('usemin');
     grunt.task.start();
@@ -281,7 +278,7 @@ describe('usemin', function () {
     grunt.filerev = {summary: {'images/test.png': 'images/test.2134.png'}};
     grunt.log.muted = true;
     grunt.config.init();
-    grunt.config('usemin', {html: 'index.html'});
+    grunt.config('usemin', {html: 'index.html', options: { useDjangoPatterns: true}});
     grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
     grunt.task.run('usemin');
     grunt.task.start();

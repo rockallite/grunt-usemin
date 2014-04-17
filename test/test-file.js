@@ -13,7 +13,7 @@ describe('File', function() {
 
   it('should extract a list of blocks from furnished file', function() {
     var file = new File(path.join(__dirname, 'fixtures', 'usemin.html'));
-    assert.ok(file.blocks.length, 2);
+    assert.equal(2, file.blocks.length);
   });
 
   it('should *not* skip blank lines', function () {
