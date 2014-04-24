@@ -38,12 +38,16 @@ By default the transformation flow is composed of `concat` and `uglifyjs` for JS
 Blocks are expressed as:
 
 ```html
-<!-- build:<type>(alternate search path) <path> -->
+<!-- build:<type>:revonly(alternate search path) <path> -->
 ... HTML Markup, list of script / link tags.
+  <!-- exclude -->
+  ... Optional tags which should be excluded from build.
+  <!-- endexclude -->
 <!-- endbuild -->
 ```
 
 - **type**: either `js` or `css`
+- **revonly**: if specified, `concat`, `uglify` and `cssmin` will be bypassed. Only target file will be replaced by revved version.
 - **alternate search path**: (optional) By default the input files are relative to the treated file. Alternate search path allows one to change that
 - **path**: the file path of the optimized file, the target output
 
@@ -55,7 +59,30 @@ An example of this in completed form can be seen below:
 <script src="js/controllers/thing-controller.js"></script>
 <script src="js/models/thing-model.js"></script>
 <script src="js/views/thing-view.js"></script>
+  <!-- exclude -->
+  <script src="js/debug.js"></script>
+  <!-- endexclude -->
 <!-- endbuild -->
+```
+
+There's also a JavaScript version of blocks, using `/*** ... ***/` instead of `<!-- ... -->`:
+
+```javascript
+Modernizr.load({
+  test: 'someFeature' in window,
+  nope: [
+    /*** build:js scripts/polyfills.js ***/
+    'lib/console-polyfill.js',
+    'lib/localstorage-polyfill.js',
+    'lib/placeholder-polyfill.js'
+    /*** endbuild ***/
+  ]
+});
+
+// If there's only one string literal in the line, can also be written as:
+/*** build:js:revonly js/mymodule.js ***/
+var requireJsMain = 'js/mymodule.js';
+/*** endbuild ***/
 ```
 
 ### Transformation flow
