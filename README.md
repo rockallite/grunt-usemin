@@ -80,7 +80,7 @@ Modernizr.load({
 });
 
 // If there's only one string literal in the line, can also be written as:
-/*** build:js:revonly js/mymodule.js ***/
+/*** build:js:revonly ***/
 var requireJsMain = 'js/mymodule.js';
 /*** endbuild ***/
 ```
@@ -266,16 +266,16 @@ Attributes:
 * `options`: options of the `Gruntfile.js` for this step (e.g. if the step is named `foo`, holds configuration of the `Gruntfile.js` associated to the attribute `foo`)
 
 ###### `block`
-The actual looked-at block, parsed an put in a structure.
+The actual looked-at block, parsed and put in a structure.
 
 Example:
 The following block
 ```html
-  <!-- build:js scripts/site.js -->',
-  <script src="foo.js"></script>',
-  <script src="bar.js"></script>',
-  <script src="baz.js"></script>',
-  <!-- endbuild -->'
+  <!-- build:js scripts/site.js -->
+  <script src="foo.js"></script>
+  <script src="bar.js"></script>
+  <script src="baz.js"></script>
+  <!-- endbuild -->
 ```
 
 is parsed as, and given to `createConfig` as:
@@ -290,11 +290,35 @@ var block = {
       'baz.js'
     ],
     raw: [
-      '    <!-- build:js scripts/site.js -->',
-      '    <script src="foo.js"></script>',
-      '    <script src="bar.js"></script>',
-      '    <script src="baz.js"></script>',
-      '    <!-- endbuild -->'
+      '  <!-- build:js scripts/site.js -->',
+      '  <script src="foo.js"></script>',
+      '  <script src="bar.js"></script>',
+      '  <script src="baz.js"></script>',
+      '  <!-- endbuild -->'
+    ]
+  };
+
+```
+
+For single source block with the same target path, it can be simplified as:
+
+```html
+  <!-- build:js -->
+  <script src="foo.js"></script>
+  <!-- endbuild -->
+```
+
+And is parsed as:
+
+```js
+var block = {
+    type: 'js',
+    dest: 'foo.js',
+    src: ['foo.js'],
+    raw: [
+      '  <!-- build:js -->',
+      '  <script src="foo.js"></script>',
+      '  <!-- endbuild -->'
     ]
   };
 
@@ -590,18 +614,20 @@ This will, on the fly, generate the following configuration:
 
 By default, static assets of `<script>`, `<link>`, `<img>`, and inline CSS, etc, will be automatically replaced by the corresponding revved version. However, sometimes you may need to replace some assets not in those positions. You'll need to surround the asset URL by `{# usemin #} ... {# endusemin #}`. For example:
 
-```html
-<!DOCYTYPE html>
-<html>
-<head>
-<script>
-  // Assets among JavaScript code is not detected. Use the surrounding tags
-  var imgUrl = '{# usemin #}{% static "images/foo.png" %}{# endusemin #}';
-</script>
-</head>
+```js
+// Assets among JavaScript code is not detected. Use the surrounding tags
+var imgUrl = '{# usemin #}{% static "images/foo.png" %}{# endusemin #}';
 ```
 
-After the `usemin` task, the image URL will be replaced by the revved version, and the `{# usemin #} ... {# endusemin #}` tags will be removed.
+After the `usemin` task, the image URL will be replaced by the revved version, and the `{# usemin #} ... {# endusemin #}` tags will be removed. Acutally this is the same as:
+
+```js
+/*** build:js:revonly ***/
+var imgUrl = '{% static "images/foo.png" %}';
+/*** endbuild ***/
+```
+
+However, the latter is only useful when there's only one string literal per line.
 
 ## License
 
