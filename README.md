@@ -48,7 +48,7 @@ Blocks are expressed as:
 
 - **type**: either `js` or `css`
 - **revonly**: if specified, `concat`, `uglify` and `cssmin` will be bypassed. Only target file will be replaced by revved version.
-- **alternate search path**: (optional) By default the input files are relative to the treated file. Alternate search path allows one to change that
+- **alternate search path**: (optional) By default the input files are relative to the treated file. Alternate search path allows one to search files related to the working directory or absolute to the file system.
 - **path**: the file path of the optimized file, the target output
 
 An example of this in completed form can be seen below:
@@ -612,14 +612,14 @@ This will, on the fly, generate the following configuration:
 
 > Django-aware extension
 
-By default, static assets of `<script>`, `<link>`, `<img>`, and inline CSS, etc, will be automatically replaced by the corresponding revved version. However, sometimes you may need to replace some assets not in those positions. You'll need to surround the asset URL by `{# usemin #} ... {# endusemin #}`. For example:
+By default, static assets of `<script>`, `<link>`, `<img>`, and inline CSS, etc, will be automatically replaced by the corresponding revved version. However, sometimes you may need to replace some assets not in those positions. You'll need to surround the asset URL by `{# usemin #} ... {# endusemin #}` (or in JavaScript code, `/** usemin **/ ... /** endusemin **/`). For example:
 
 ```js
 // Assets among JavaScript code is not detected. Use the surrounding tags
 var imgUrl = '{# usemin #}{% static "images/foo.png" %}{# endusemin #}';
 ```
 
-After the `usemin` task, the image URL will be replaced by the revved version, and the `{# usemin #} ... {# endusemin #}` tags will be removed. Acutally this is the same as:
+After the `usemin` task, the image URL will be replaced by the revved version, and the `{# usemin #} ... {# endusemin #}` (or in JavaScript code, `/** usemin **/ ... /** endusemin **/`) tags will be removed. Acutally this is the same as:
 
 ```js
 /*** build:js:revonly ***/

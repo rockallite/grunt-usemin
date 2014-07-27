@@ -1,5 +1,6 @@
 'use strict';
 var util = require('util');
+var fs = require('fs');
 
 var inspect = function (obj) {
   return util.inspect(obj, false, 4, true);
@@ -135,6 +136,11 @@ module.exports = function (grunt) {
     this.files.forEach(function (fileObj) {
       var files = grunt.file.expand({nonull: true}, fileObj.src);
       files.forEach(function (filename) {
+        if (fs.lstatSync(filename).isDirectory()) {
+            debug('bypass directory %s', filename);
+            return;
+        }
+
         debug('looking at file %s', filename);
 
         grunt.log.subhead('Processing as ' + options.type.toUpperCase() + ' - ' + filename);
